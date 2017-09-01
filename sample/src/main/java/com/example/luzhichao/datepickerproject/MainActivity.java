@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
                         .setSelectedCallback(new DatePicker.OnSelectDateListener() {
                             @Override
                             public void onDateSelected(String dateString) {
-
+                                dateTextView.setText(dateString);
                             }
                         })
                         .setType(DatePicker.NORMAL_TYPE)
