@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="460dp"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:background="#E9E9E9"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/pop_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="15dp"
+        android:text="选择类型"
+        android:textColor="#212121"
+        android:textSize="18sp" />
+
+    <com.nongfenqi.sherlock.view.WheelView
+        android:id="@+id/dialog_dynamic_wheel_view_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="15dp"
+        android:background="@android:color/transparent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/dialog_dynamic_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/dialog_dynamic_confirm"
+            android:text="取消"
+            android:textColor="#464646"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/dialog_dynamic_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="80dp"
+            android:text="确定"
+            android:textColor="#18CBDD"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+
+    <dimen name="zero_height">0dp</dimen>
+    <dimen name="picture_size">48dp</dimen>
+    <dimen name="medal_size">30dp</dimen>
+    <dimen name="top_and_bottom_and_right_padding">24dp</dimen>
+    <dimen name="login_img_size">76dp</dimen>
+    <dimen name="tag_width">78dp</dimen>
+    <dimen name="login_top_margin">96dp</dimen>
+    <dimen name="text_view_layout">30dp</dimen>
+    <dimen name="normal_padding">32dp</dimen>
+    <dimen name="topPicHeight">224dp</dimen>
+    <dimen name="title_height">36dp</dimen>
+    <dimen name="error_dialog_height">594dp</dimen>
+    <dimen name="business_item_padding_start">56dp</dimen>
+    <dimen name="business_list_content_linear_layout_height">48dp</dimen><!--业务列表客户名称和状态的线性布局高度-->
+    <dimen name="normal_small_padding">16dp</dimen><!--业务列表客户-->
+    <dimen name="business_list_apply_state_top_spacing">8dp</dimen><!--业务状态列表顶部留白-->
+    <dimen name="business_list_progress_length_land">157dp</dimen><!--业务状态列表进度条宽度-->
+    <dimen name="business_list_progress_top_spacing">10dp</dimen><!--业务列表进度条顶部留白-->
+    <dimen name="business_list_progress_view_height">3dp</dimen><!--业务列表进度条高度-->
+    <dimen name="business_list_state_top_spacing">12dp</dimen>
+    <dimen name="vertical_divider_line_spacing">5dp</dimen>
+    <dimen name="view_padding">16dp</dimen>
+    <dimen name="selected_content">48dp</dimen>
+    <dimen name="image_margin">52dp</dimen>
+    <dimen name="image_size">20dp</dimen>
+    <dimen name="image_spacing_text">5dp</dimen>
+    <dimen name="business_list_container_width">426dp</dimen>
+    <dimen name="dialog_width">538dp</dimen>
+    <dimen name="view_divider">2dp</dimen>
+    <dimen name="business_list_progress_length">359dp</dimen>
+    <dimen name="title_size">18sp</dimen>
+    <dimen name="regional_user_item_height">64dp</dimen>
+    <dimen name="region_text_spacing">4dp</dimen>
+    <dimen name="material_drawer_padding_half">4dp</dimen>
+    <dimen name="material_drawer_persistent_height_icon">64dp</dimen>
+    <dimen name="tag_text_height">28dp</dimen>
+    <dimen name="line_width">1dp</dimen>
+    <dimen name="match_parent">-1dp</dimen>
+    <dimen name="wrap_content">-2dp</dimen>
+    <dimen name="tag_height">30dp</dimen>
+    <dimen name="quest_nav_margin">60dp</dimen>
+    <dimen name="image_padding">74dp</dimen>
+    <dimen name="index_text_space">6dp</dimen>
+    <dimen name="intent_content_height">118dp</dimen>
+    <dimen name="popup_content_width">496dp</dimen>
+    <dimen name="popup_title_height">74dp</dimen>
+    <dimen name="template_height">54dp</dimen>
+    <dimen name="intent_size_height">40dp</dimen>
+    <dimen name="button_width">88dp</dimen>
+
+    <dimen name="top_spacing">32dp</dimen><!--顶部留白-->
+    <dimen name="left_spacing">56dp</dimen><!--左边留白-->
+    <dimen name="relative_person_view_name_height">30dp</dimen><!--关系人显示姓名高度-->
+    <dimen name="info_height">24dp</dimen><!--关系人显示身份证 农机管理中的信息等高度-->
+    <dimen name="relative_person_view_height">8dp</dimen>
+    <dimen name="no_data_width">320dp</dimen>
+    <dimen name="no_data_height">213dp</dimen>
+    <dimen name="report_text_size">24sp</dimen>
+
+    <dimen name="new_left_spacing">32dp</dimen><!--新建编辑关系人左边留白-->
+    <dimen name="machine_view_height">16dp</dimen>
+    <dimen name="key_width">100dp</dimen><!---->
+    <dimen name="key_right">24dp</dimen><!--值键间距-->
+
+    <dimen name="card_width">80dp</dimen><!--卡片布局key width-->
+    <dimen name="card_view_height">16dp</dimen><!--卡片-->
+    <dimen name="card_left_spacing">32dp</dimen>
+    <dimen name="card_top_spacing">20dp</dimen>
+    <dimen name="card_checkbox_left_spacing">30dp</dimen>
+    <dimen name="card_width_wider">100dp</dimen>
+    <dimen name="coborrower_key_width">50dp</dimen><!--共借人key的width-->
+    <dimen name="form_widget_top_spacing">24dp</dimen>
+
+    <dimen name="label_height">30dp</dimen><!--标签高度-->
+    <dimen name="label_left_spacing">32dp</dimen><!--标签左右宽度-->
+    <dimen name="card_bottom_spacing">56dp</dimen>
+    <dimen name="card_title_height">64dp</dimen>
+    <dimen name="card_margin_spacing">24dp</dimen>
+    <dimen name="card_view_title_height">56dp</dimen>
+    <dimen name="tag_bottom_padding">72dp</dimen>
+    <dimen name="fab_menu_size">64dp</dimen>
+    <dimen name="fab_button_size">54dp</dimen>
+
+    <dimen name="tab_height">64dp</dimen>
+
+    <!-- Font Size -->
+    <dimen name="toolbar_menu_text_size">18sp</dimen>
+    <dimen name="business_list_apply_state_size">14sp</dimen><!--业务列表状态字体大小-->
+    <dimen name="tag_text_size">14sp</dimen>
+    <dimen name="tag_corner">16sp</dimen>
+    <dimen name="title_top_size">20sp</dimen>
+    <dimen name="name_size">18sp</dimen><!--关系人，农机页面-->
+    <dimen name="key_value_size">16sp</dimen><!--农机页面值键大小-->
+
+    <dimen name="ic_bottom_menu_size">48dp</dimen>
+    <dimen name="edit_height">256dp</dimen>
+
+</resources>
