@@ -28,7 +28,7 @@
             android:layout_height="170dp"
             android:orientation="horizontal">
 
-            <com.nongfenqi.sherlock.view.WheelView
+            <com.example.datepicker.wheelview.WheelView
                 android:id="@+id/dialog_choose_month"
                 android:layout_width="120dp"
                 android:layout_height="150dp"
@@ -37,7 +37,7 @@
                 android:layout_toEndOf="@+id/dialog_choose_year"
                 android:background="@android:color/transparent" />
 
-            <com.nongfenqi.sherlock.view.WheelView
+            <com.example.datepicker.wheelview.WheelView
                 android:id="@+id/dialog_choose_day"
                 android:layout_width="120dp"
                 android:layout_height="150dp"
@@ -46,7 +46,7 @@
                 android:layout_toEndOf="@+id/dialog_choose_month"
                 android:background="@android:color/transparent" />
 
-            <com.nongfenqi.sherlock.view.WheelView
+            <com.example.datepicker.wheelview.WheelView
                 android:id="@+id/dialog_choose_year"
                 android:layout_width="120dp"
                 android:layout_height="150dp"
