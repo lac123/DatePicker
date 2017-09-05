@@ -4,112 +4,155 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.media.SoundPool;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.datepicker.util.DateUtil;
-import com.example.datepicker.wheelview.ArrayWheelAdapter;
-import com.example.datepicker.wheelview.OnWheelChangedListener;
 import com.example.datepicker.wheelview.WheelView;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * 自定义时间滚动选择器
- *
  * @author luzhichao
- * @version 1.0,  2016-10-18 17:02
- * @since [sherlock/V1.0.0]
+ * @version 2.1, 2017/9/4
+ * @since [DatePickerProject/V2.1.2]
  */
 
 public class DatePicker extends AlertDialog implements View.OnClickListener {
     public static final String TAG = DatePicker.class.getSimpleName();
-    private static final int TOTAL_YEAR_AMOUNT = 200;
     private Context context;
 
-    private WheelView yearWheelView;
+    private int curYear = Calendar.getInstance().get(Calendar.YEAR);
+    private int curMonth = Calendar.getInstance().get(Calendar.MONTH);
+    private int curDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 
-    private WheelView monthWheelView;
+    private WheelView firstYearWheelView;
 
-    private WheelView dayWheelView;
+    private WheelView firstMonthWheelView;
 
-    private LinearLayout longTerm;
+    private WheelView firstDayWheelView;
+
+    private WheelView secondYearWheelView;
+
+    private WheelView secondMonthWheelView;
+
+    private WheelView secondDayWheelView;
+
+    private TextView longTerm;
 
     private TextView dialogTitle;
 
-    private final int TOTAL_MONTH_AMOUNT = 12;
+    public static final int NORMAL_TYPE = 0;
     public static final int CARD_EXPIRY_TYPE = 1;
-    public static final int NORMAL_TYPE = 2;
-    private OnSelectDateListener callback;
-    private String date;
 
-    //设置当前的年、月、日
-    private int curYear, curMonth, curDay;
-    //根据不同的月份和年份设置一个随不同情况变化而变化的成员变量 mDay
-    private int mDay;
-    //String[] yearParent = new String[TOTAL_YEAR_AMOUNT];
-    private String[] yearParent;
-    private String[] monthParent = new String[TOTAL_MONTH_AMOUNT];
-    private String[] dayParent;
+    private String defaultDate;
+
+    //根据不同的月份和年份设置一个随不同情况变化而变化的成员变量 mFirstDayCount
+    private int mFirstDayCount;
+    private int mSecondDayCount;
+
+    //当前默认在哪一天
+    private int mFirstDefaultDayIndex;
+
+    private int mSecondDefaultDayIndex;
+
     private SoundPool soundPool;
     private int soundId;
 
+    private OnSelectDateListener callback;
+
+    private int mPickerType;
+
+    //是否为时间区间的格式
+    private boolean isDoubleDate;
+
     //构造函数
-    public DatePicker(Context context, int type, String date, OnSelectDateListener callback) {
+    private DatePicker(Context context, Builder builder) {
         super(context, R.style.AlertDialog);
-        show();
-        setContentView(R.layout.alert_dialog_date_choose_by_wheelview);
-
-        initUIWidgets();//init widgets
-
         this.context = context;
-        this.callback = callback;
-        this.date = date;
 
-        if (type == CARD_EXPIRY_TYPE) {
-            dialogTitle.setText(String.format("%s", "请选择身份证有效期"));
-            yearParent = new String[TOTAL_YEAR_AMOUNT];
-        } else if (type == NORMAL_TYPE) {
-            yearParent = new String[TOTAL_YEAR_AMOUNT];
-            longTerm.setVisibility(View.GONE);
-            dialogTitle.setText(String.format("%s", "请选择日期"));
+        show();
+        setPickerType(builder.type);
+        setDoubleDate(builder.isDoubleDate);
+        setDefaultDate(builder.defaultDate);
+        setCallback(builder.callback);
+        if (builder.isDoubleDate) {
+            setContentView(R.layout.alert_dialog_double_date_picker);
+        } else {
+            setContentView(R.layout.alert_dialog_single_date_picker);
         }
+
+        //init widgets
+        initUIWidgets();
         initData();
+    }
+
+    public void setPickerType(int pickerType) {
+        mPickerType = pickerType;
+    }
+
+    public void setDoubleDate(boolean doubleDate) {
+        isDoubleDate = doubleDate;
+    }
+
+    public void setDefaultDate(String defaultDate) {
+        this.defaultDate = defaultDate;
+    }
+
+    public void setCallback(OnSelectDateListener callback) {
+        this.callback = callback;
     }
 
     /**
      * 初始化UI控件
      */
     private void initUIWidgets() {
-        yearWheelView = (WheelView) findViewById(R.id.dialog_choose_year);
-        monthWheelView = (WheelView) findViewById(R.id.dialog_choose_month);
-        dayWheelView = (WheelView) findViewById(R.id.dialog_choose_day);
-        longTerm = (LinearLayout) findViewById(R.id.ll_choose_id_long_term);
+
+        firstYearWheelView = (WheelView) findViewById(R.id.dialog_choose_year);
+        firstMonthWheelView = (WheelView) findViewById(R.id.dialog_choose_month);
+        firstDayWheelView = (WheelView) findViewById(R.id.dialog_choose_day);
+
+        longTerm = (TextView) findViewById(R.id.tv_long_term);
         dialogTitle = (TextView) findViewById(R.id.dialog_title);
+
+        if (isDoubleDate) {
+            secondYearWheelView = (WheelView) findViewById(R.id.second_dialog_choose_year);
+            secondMonthWheelView = (WheelView) findViewById(R.id.second_dialog_choose_month);
+            secondDayWheelView = (WheelView) findViewById(R.id.second_dialog_choose_day);
+        }
+
+        //click listener
         longTerm.setOnClickListener(this);
-        findViewById(R.id.dialog_date_choose_cancel).setOnClickListener(this);
-        findViewById(R.id.dialog_date_choose_sure).setOnClickListener(this);
+        findViewById(R.id.ensure_text_view).setOnClickListener(this);
+        findViewById(R.id.cancel_text_view).setOnClickListener(this);
+
+        if (mPickerType == CARD_EXPIRY_TYPE) {
+            longTerm.setVisibility(View.VISIBLE);
+            dialogTitle.setText(String.format("%s", "请选择身份证有效期"));
+        } else {
+            dialogTitle.setText(String.format("%s", "请选择日期"));
+        }
     }
 
-    /**
-     * Builder 的构造函数
-     *
-     * @param context
-     * @param builder
-     */
-    private DatePicker(Context context, Builder builder) {
-        this(context, builder.type, builder.date, builder.callback);
-    }
 
     @Override
     public void onClick(View view) {
         int which = view.getId();
-        if (which == R.id.dialog_date_choose_cancel) {
+        if (which == R.id.cancel_text_view) {
             cancel();
-        } else if (which == R.id.dialog_date_choose_sure) {
-            String selectedDateString = String.format("%s%s%s%s%s", yearParent[yearWheelView.getCurrentItem()]
-                    , "-", monthParent[monthWheelView.getCurrentItem()], "-", dayParent[dayWheelView.getCurrentItem()]);
+        } else if (which == R.id.ensure_text_view) {
+            String selectedDateString;
+            if (isDoubleDate) {
+                selectedDateString = String.format("%s%s%s%s%s", firstYearWheelView.getSelectedText()
+                        , "-", firstMonthWheelView.getSelectedText(), "-", firstDayWheelView.getSelectedText() + "~" +
+                                String.format("%s%s%s%s%s", secondYearWheelView.getSelectedText()
+                                        , "-", secondMonthWheelView.getSelectedText(), "-", secondDayWheelView.getSelectedText()))
+                ;
+            } else {
+                selectedDateString = String.format("%s%s%s%s%s", firstYearWheelView.getSelectedText()
+                        , "-", firstMonthWheelView.getSelectedText(), "-", firstDayWheelView.getSelectedText());
+            }
             callback.onDateSelected(selectedDateString);
             dismiss();
         } else {
@@ -125,145 +168,278 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
         soundPool = new SoundPool.Builder().build();
         soundId = soundPool.load(context, R.raw.tock, 1);
 
-        Calendar c = Calendar.getInstance();
-        curYear = c.get(Calendar.YEAR);
-        curMonth = c.get(Calendar.MONTH);
-        curDay = c.get(Calendar.DAY_OF_MONTH);
 
-        int yearStart = 1900;//开始年份
-        for (int i = 0; i < TOTAL_YEAR_AMOUNT; i++) {
-            yearParent[i] = String.valueOf(yearStart);
-            yearStart++;
-        }
-        int monCount = 1;
-        for (int i = 0; i < TOTAL_MONTH_AMOUNT; i++) {
-            monthParent[i] = String.valueOf(monCount);
-            monCount++;
+        firstYearWheelView.setData(getYearData());
+        firstMonthWheelView.setData(getMonthData());
+
+        if (isDoubleDate) {
+            secondYearWheelView.setData(getYearData());
+            secondMonthWheelView.setData(getMonthData());
         }
 
-        if (Integer.valueOf(monthParent[monthWheelView.getCurrentItem()]) == 2) {
-            if (isLeapYear(Integer.valueOf(yearParent[yearWheelView.getCurrentItem()]))) {
-                mDay = 29;
-                dayParent = new String[mDay];
-                setDays(mDay);
-            } else {
-                //如果是闰年
-                mDay = 28;
-                dayParent = new String[mDay];
-                setDays(mDay);
+        initDefaultDate(defaultDate, firstYearWheelView, firstMonthWheelView, firstDayWheelView);
+
+        if (isDoubleDate) {
+            String secondDefaultDate = null;
+            if (defaultDate.contains("~")) {
+                secondDefaultDate = defaultDate.split("~")[1];
             }
+            initDefaultDate(secondDefaultDate, secondYearWheelView, secondMonthWheelView, secondDayWheelView);
         }
-        if (Integer.valueOf(monthParent[monthWheelView.getCurrentItem()]) != 2 &&
-                isSmallMonth(Integer.valueOf(monthParent[monthWheelView.getCurrentItem()]))) {
-            mDay = 30;
-            dayParent = new String[mDay];
-            setDays(mDay);
-        } else if (Integer.valueOf(monthParent[monthWheelView.getCurrentItem()]) != 2 &&
-                !isSmallMonth(Integer.valueOf(monthParent[monthWheelView.getCurrentItem()]))) {
-            mDay = 31;
-            dayParent = new String[mDay];
-            setDays(mDay);
-        }
-        yearWheelView.addChangingListener(new OnWheelChangedListener() {
+
+        firstYearWheelView.setOnSelectListener(new WheelView.OnSelectListener() {
             @Override
-            public void onChanged(WheelView wheel, int oldValue, int newValue) {
-                changeItem(yearWheelView, newValue);
+            public void endSelect(int id, String text) {
+                changeItem(firstYearWheelView, firstDayWheelView, id);
+            }
+
+            @Override
+            public void selecting(int id, String text) {
+
             }
         });
-        monthWheelView.addChangingListener(new OnWheelChangedListener() {
+        firstMonthWheelView.setOnSelectListener(new WheelView.OnSelectListener() {
             @Override
-            public void onChanged(WheelView wheel, int oldValue, int newValue) {
-                changeItem(monthWheelView, newValue);
+            public void endSelect(int id, String text) {
+                changeItem(firstMonthWheelView, firstDayWheelView, id);
             }
 
-        });
-        dayWheelView.addChangingListener(new OnWheelChangedListener() {
             @Override
-            public void onChanged(WheelView wheel, int oldValue, int newValue) {
-                playSound();
+            public void selecting(int id, String text) {
+
+            }
+        });
+        firstDayWheelView.setOnSelectListener(new WheelView.OnSelectListener() {
+            @Override
+            public void endSelect(int id, String text) {
+                changeItem(firstDayWheelView, firstDayWheelView, id);
+            }
+
+            @Override
+            public void selecting(int id, String text) {
+
             }
         });
 
-        initViews();
+        if (isDoubleDate) {
+            secondYearWheelView.setOnSelectListener(new WheelView.OnSelectListener() {
+                @Override
+                public void endSelect(int id, String text) {
+                    changeItem(secondYearWheelView, secondDayWheelView, id);
+                }
+
+                @Override
+                public void selecting(int id, String text) {
+
+                }
+            });
+
+            secondMonthWheelView.setOnSelectListener(new WheelView.OnSelectListener() {
+                @Override
+                public void endSelect(int id, String text) {
+                    changeItem(secondMonthWheelView, secondDayWheelView, id);
+                }
+
+                @Override
+                public void selecting(int id, String text) {
+
+                }
+            });
+
+            secondDayWheelView.setOnSelectListener(new WheelView.OnSelectListener() {
+                @Override
+                public void endSelect(int id, String text) {
+                    changeItem(secondDayWheelView, secondDayWheelView, id);
+                }
+
+                @Override
+                public void selecting(int id, String text) {
+
+                }
+            });
+        }
     }
 
-    private void initViews() {
-        yearWheelView.setVisibleItems(3);
-        monthWheelView.setVisibleItems(3);
-        dayWheelView.setVisibleItems(3);
-        yearWheelView.setViewAdapter(new ArrayWheelAdapter<>(context, yearParent));
-        monthWheelView.setViewAdapter(new ArrayWheelAdapter<>(context, monthParent));
-        dayWheelView.setViewAdapter(new ArrayWheelAdapter<>(context, dayParent));
+    private void initDefaultDate(String defaultDate, WheelView yearWV, WheelView monthWV, WheelView dayWV) {
         try {
-            DateUtil.sdfShort.parse(date);
-            int incomingYear = Integer.valueOf(date.split("-")[0]);
-            int incomingMonth = Integer.valueOf(date.split("-")[1]);
-            int incomingDay = Integer.valueOf(date.split("-")[2]);
+            DateUtil.sdfShort.parse(defaultDate);
 
-            int yearDifference = incomingYear - curYear;
+            int firstIncomingYear = Integer.valueOf(defaultDate.split("-")[0]);
+            int firstIncomingMonth = Integer.valueOf(defaultDate.split("-")[1]);
+            String inComingDayStr = defaultDate.split("-")[2];
+
+            int firstIncomingDay;
+
+            if (inComingDayStr.contains("~")) {
+                firstIncomingDay = Integer.valueOf(inComingDayStr.split("~")[0]);
+            } else {
+                firstIncomingDay = Integer.valueOf(defaultDate.split("-")[2]);
+            }
+
+            int yearDifference = firstIncomingYear - curYear;
 
             if (yearDifference != 0) {
-                yearWheelView.setCurrentItem((curYear - 1900) + yearDifference);
+                yearWV.setDefault((curYear - 1900) + yearDifference);
             } else {
-                yearWheelView.setCurrentItem(curYear - 1900);
+                yearWV.setDefault(curYear - 1900);
             }
 
-            monthWheelView.setCurrentItem(incomingMonth - 1);
-            dayWheelView.setCurrentItem(incomingDay - 1);
+            monthWV.setDefault(firstIncomingMonth - 1);
+            initDayCount(yearWV, monthWV, dayWV);
+            if (yearWV == firstYearWheelView) {
+                mFirstDefaultDayIndex = firstIncomingDay - 1;
+            } else {
+                mSecondDefaultDayIndex = firstIncomingDay - 1;
+            }
+            dayWV.setDefault(firstIncomingDay - 1);
         } catch (ParseException | NullPointerException e) {
             e.printStackTrace();
-            yearWheelView.setCurrentItem(curYear - 1900);
+            yearWV.setDefault(curYear - 1900);
 
-            monthWheelView.setCurrentItem(curMonth);
-            dayWheelView.setCurrentItem(curDay - 1);
+            monthWV.setDefault(curMonth);
+            initDayCount(yearWV, monthWV, dayWV);
+            if (yearWV == firstYearWheelView) {
+                mFirstDefaultDayIndex = curDay - 1;
+            } else {
+                mSecondDefaultDayIndex = curDay - 1;
+            }
+            dayWV.setDefault(curDay - 1);
         }
     }
 
-    private void changeItem(WheelView wheelView, int newValue) {
-        playSound();
-        int newMonth = newValue + 1;
-        if (wheelView == monthWheelView) {
-            yearWheelView.getCurrentItem();
-            if (newMonth == 2 && isLeapYear(Integer.valueOf(yearParent[yearWheelView.getCurrentItem()]))) {
-                mDay = 29;
-                refreshDay();
-
-            } else if (newMonth == 2 && !isLeapYear(Integer.valueOf(yearParent[yearWheelView.getCurrentItem()]))) {
-                mDay = 28;
-                refreshDay();
+    /**
+     * 初始化日期的天数
+     */
+    private void initDayCount(WheelView yearWV, WheelView monthWV, WheelView dayWV) {
+        if (Integer.valueOf(monthWV.getSelectedText()) == 2) {
+            if (isLeapYear(Integer.valueOf(yearWV.getSelectedText()))) {
+                if (yearWV == firstYearWheelView) {
+                    mFirstDayCount = 29;
+                } else {
+                    mSecondDayCount = 29;
+                }
+                refreshDay(dayWV);
+            } else {
+                //如果是闰年
+                if (yearWV == firstYearWheelView) {
+                    mFirstDayCount = 28;
+                } else {
+                    mSecondDayCount = 28;
+                }
+                refreshDay(dayWV);
             }
-            if (newMonth != 2 && isSmallMonth(Integer.valueOf(monthParent[newValue]))) {
-                mDay = 30;
-                refreshDay();
-            } else if (newMonth != 2 && !isSmallMonth(Integer.valueOf(monthParent[newValue]))) {
-                mDay = 31;
-                refreshDay();
+        } else {
+            if (isSmallMonth(Integer.valueOf(monthWV.getSelectedText()))) {
+                if (yearWV == firstYearWheelView) {
+                    mFirstDayCount = 30;
+                } else {
+                    mSecondDayCount = 30;
+                }
+                refreshDay(dayWV);
+            } else {
+                if (yearWV == firstYearWheelView) {
+                    mFirstDayCount = 31;
+                } else {
+                    mSecondDayCount = 31;
+                }
+                refreshDay(dayWV);
             }
         }
-        if (wheelView == yearWheelView) {
-            if (isLeapYear(Integer.valueOf(yearParent[newValue]))) {
-                if (Integer.valueOf(monthParent[monthWheelView.getCurrentItem()]) == 2) {
-                    mDay = 29;
-                    refreshDay();
-                } else if (isSmallMonth(Integer.valueOf(monthParent[monthWheelView.getCurrentItem()]))) {
-                    mDay = 30;
-                    refreshDay();
-                } else if (!isSmallMonth(Integer.valueOf(monthParent[monthWheelView.getCurrentItem()]))) {
-                    mDay = 31;
-                    refreshDay();
+    }
+
+    /**
+     * 当滑动时动态配置日期选择器中的数据
+     *
+     * @param wheelView
+     * @param newValue
+     */
+    private void changeItem(WheelView wheelView, WheelView dayWV, int newValue) {
+        playSound();
+        int newMonth = newValue + 1;
+        if (wheelView == firstMonthWheelView) {
+            if (newMonth == 2 && isLeapYear(Integer.valueOf(firstYearWheelView.getSelectedText()))) {
+                mFirstDayCount = 29;
+                refreshDay(dayWV);
+
+            } else if (newMonth == 2 && !isLeapYear(Integer.valueOf(firstYearWheelView.getSelectedText()))) {
+                mFirstDayCount = 28;
+                refreshDay(dayWV);
+            }
+            if (newMonth != 2 && isSmallMonth(Integer.valueOf(firstMonthWheelView.getSelectedText()))) {
+                mFirstDayCount = 30;
+                refreshDay(dayWV);
+            } else if (newMonth != 2 && !isSmallMonth(Integer.valueOf(firstMonthWheelView.getSelectedText()))) {
+                mFirstDayCount = 31;
+                refreshDay(dayWV);
+            }
+        } else if (wheelView == firstYearWheelView) {
+            if (isLeapYear(Integer.valueOf(firstYearWheelView.getSelectedText()))) {
+                if (Integer.valueOf(firstMonthWheelView.getSelectedText()) == 2) {
+                    mFirstDayCount = 29;
+                    refreshDay(dayWV);
+                } else if (isSmallMonth(Integer.valueOf(firstMonthWheelView.getSelectedText()))) {
+                    mFirstDayCount = 30;
+                    refreshDay(dayWV);
+                } else if (!isSmallMonth(Integer.valueOf(firstMonthWheelView.getSelectedText()))) {
+                    mFirstDayCount = 31;
+                    refreshDay(dayWV);
                 }
-            } else if (!isLeapYear(Integer.valueOf(yearParent[newValue]))) {
-                if (Integer.valueOf(monthParent[monthWheelView.getCurrentItem()]) == 2) {
-                    mDay = 28;
-                    refreshDay();
-                } else if (isSmallMonth(Integer.valueOf(monthParent[monthWheelView.getCurrentItem()]))) {
-                    mDay = 30;
-                    refreshDay();
-                } else if (!isSmallMonth(Integer.valueOf(monthParent[monthWheelView.getCurrentItem()]))) {
-                    mDay = 31;
-                    refreshDay();
+            } else if (!isLeapYear(Integer.valueOf(firstYearWheelView.getSelectedText()))) {
+                if (Integer.valueOf(firstMonthWheelView.getSelectedText()) == 2) {
+                    mFirstDayCount = 28;
+                    refreshDay(dayWV);
+                } else if (isSmallMonth(Integer.valueOf(firstMonthWheelView.getSelectedText()))) {
+                    mFirstDayCount = 30;
+                    refreshDay(dayWV);
+                } else if (!isSmallMonth(Integer.valueOf(firstMonthWheelView.getSelectedText()))) {
+                    mFirstDayCount = 31;
+                    refreshDay(dayWV);
                 }
             }
+        } else if (wheelView == firstDayWheelView) {
+            mFirstDefaultDayIndex = firstDayWheelView.getSelected();
+        } else if (wheelView == secondMonthWheelView) {
+            if (newMonth == 2 && isLeapYear(Integer.valueOf(secondYearWheelView.getSelectedText()))) {
+                mSecondDayCount = 29;
+                refreshDay(dayWV);
+
+            } else if (newMonth == 2 && !isLeapYear(Integer.valueOf(secondYearWheelView.getSelectedText()))) {
+                mSecondDayCount = 28;
+                refreshDay(dayWV);
+            }
+            if (newMonth != 2 && isSmallMonth(Integer.valueOf(secondMonthWheelView.getSelectedText()))) {
+                mSecondDayCount = 30;
+                refreshDay(dayWV);
+            } else if (newMonth != 2 && !isSmallMonth(Integer.valueOf(secondMonthWheelView.getSelectedText()))) {
+                mSecondDayCount = 31;
+                refreshDay(dayWV);
+            }
+        } else if (wheelView == secondYearWheelView) {
+            if (isLeapYear(Integer.valueOf(secondYearWheelView.getSelectedText()))) {
+                if (Integer.valueOf(secondMonthWheelView.getSelectedText()) == 2) {
+                    mSecondDayCount = 29;
+                    refreshDay(dayWV);
+                } else if (isSmallMonth(Integer.valueOf(secondMonthWheelView.getSelectedText()))) {
+                    mSecondDayCount = 30;
+                    refreshDay(dayWV);
+                } else if (!isSmallMonth(Integer.valueOf(secondMonthWheelView.getSelectedText()))) {
+                    mSecondDayCount = 31;
+                    refreshDay(dayWV);
+                }
+            } else if (!isLeapYear(Integer.valueOf(secondYearWheelView.getSelectedText()))) {
+                if (Integer.valueOf(secondMonthWheelView.getSelectedText()) == 2) {
+                    mSecondDayCount = 28;
+                    refreshDay(dayWV);
+                } else if (isSmallMonth(Integer.valueOf(secondMonthWheelView.getSelectedText()))) {
+                    mSecondDayCount = 30;
+                    refreshDay(dayWV);
+                } else if (!isSmallMonth(Integer.valueOf(secondMonthWheelView.getSelectedText()))) {
+                    mSecondDayCount = 31;
+                    refreshDay(dayWV);
+                }
+            }
+        } else if (wheelView == secondDayWheelView) {
+            mSecondDefaultDayIndex = secondDayWheelView.getSelected();
         }
     }
 
@@ -286,14 +462,64 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
     /**
      * 根据不同的年份或者月份的变化来刷新天数
      */
-    private void refreshDay() {
-        //变更月份的时候，如果是从大月切换为小月或是2月，并且日期超过了即将要切换到的月份的最大天数，将日期最后一天的位置重置
-        if (dayWheelView != null && dayWheelView.getCurrentItem() + 1 > mDay) {
-            dayWheelView.setCurrentItem(mDay - 1);
+    private void refreshDay(WheelView dayWV) {
+        if (dayWV == firstDayWheelView) {
+            firstDayWheelView.refreshData(getDayData(mFirstDayCount));
+            if (mFirstDefaultDayIndex <= mFirstDayCount - 1) {
+                firstDayWheelView.setDefault(mFirstDefaultDayIndex);
+            } else {
+                firstDayWheelView.setDefault(mFirstDayCount - 1);
+                mFirstDefaultDayIndex = mFirstDayCount - 1;
+            }
+        } else {
+            secondDayWheelView.refreshData(getDayData(mSecondDayCount));
+            if (mSecondDefaultDayIndex <= mSecondDayCount - 1) {
+                secondDayWheelView.setDefault(mSecondDefaultDayIndex);
+            } else {
+                secondDayWheelView.setDefault(mSecondDayCount - 1);
+                mSecondDefaultDayIndex = mSecondDayCount - 1;
+            }
         }
-        dayParent = new String[mDay];
-        setDays(mDay);
-        dayWheelView.setViewAdapter(new ArrayWheelAdapter<>(context, dayParent));
+    }
+
+    /**
+     * 配置月
+     *
+     * @return
+     */
+    private ArrayList<String> getMonthData() {
+        ArrayList<String> monthData = new ArrayList<>();
+        for (int i = 1; i < 13; i++) {
+            monthData.add(String.valueOf(i));
+        }
+        return monthData;
+    }
+
+    /**
+     * 配置年
+     *
+     * @return
+     */
+    private ArrayList<String> getYearData() {
+        ArrayList<String> yearData = new ArrayList<>();
+        for (int i = 1900; i < 2100; i++) {
+            yearData.add(String.valueOf(i));
+        }
+        return yearData;
+    }
+
+    /**
+     * 配置日
+     *
+     * @param dayCount
+     * @return
+     */
+    private ArrayList<String> getDayData(int dayCount) {
+        ArrayList<String> dayData = new ArrayList<>();
+        for (int j = 1; j < dayCount + 1; j++) {
+            dayData.add(String.valueOf(j));
+        }
+        return dayData;
     }
 
     /**
@@ -316,24 +542,12 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
         return (month == 4 || month == 6 || month == 9 || month == 11);
     }
 
-    /**
-     * 根据获取的day来刷新数组中的数据
-     *
-     * @param day
-     */
-    private void setDays(int day) {
-        int dayCount = 1;
-        for (int i = 0; i < day; i++) {
-            dayParent[i] = String.valueOf(dayCount);
-            dayCount++;
-        }
-    }
-
     public static final class Builder {
         private Context context;
         private int type;
-        private String date;
+        private String defaultDate;
         private OnSelectDateListener callback;
+        private boolean isDoubleDate = false;
 
         public Builder(Context context) {
             this.context = context;
@@ -344,8 +558,13 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
             return this;
         }
 
+        public Builder isDoubleDate(boolean val) {
+            isDoubleDate = val;
+            return this;
+        }
+
         public Builder setDefaultDate(String val) {
-            date = val;
+            defaultDate = val;
             return this;
         }
 

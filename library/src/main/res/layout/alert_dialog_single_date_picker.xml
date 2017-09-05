@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="345dp"
+    android:layout_height="300dp"
+    android:layout_centerInParent="true"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/normal_small_padding"
+        android:paddingTop="@dimen/normal_small_padding">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="@dimen/normal_padding"
+            android:gravity="center_vertical"
+            android:text="Picker"
+            android:textColor="@color/main_black"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="170dp">
+
+            <com.example.datepicker.wheelview.WheelView
+                android:id="@+id/dialog_choose_year"
+                android:layout_width="72dp"
+                android:layout_height="150dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="37dp"
+                app:itemNumber="3"
+                app:lineColor="@color/view_divider_color"
+                app:maskHeight="32dp"
+                app:noEmpty="true"
+                app:normalTextColor="@color/light_gray"
+                app:normalTextSize="@dimen/key_value_size"
+                app:selectedTextColor="@color/main_blue"
+                app:selectedTextSize="@dimen/title_top_size"
+                app:unitHeight="@dimen/picture_size" />
+
+            <com.example.datepicker.wheelview.WheelView
+                android:id="@+id/dialog_choose_month"
+                android:layout_width="57dp"
+                android:layout_height="150dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="48dp"
+                android:layout_toEndOf="@+id/dialog_choose_year"
+                app:itemNumber="3"
+                app:lineColor="@color/view_divider_color"
+                app:maskHeight="32dp"
+                app:noEmpty="true"
+                app:normalTextColor="@color/light_gray"
+                app:normalTextSize="@dimen/key_value_size"
+                app:selectedTextColor="@color/main_blue"
+                app:selectedTextSize="@dimen/title_top_size"
+                app:unitHeight="@dimen/picture_size" />
+
+            <com.example.datepicker.wheelview.WheelView
+                android:id="@+id/dialog_choose_day"
+                android:layout_width="51dp"
+                android:layout_height="150dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="48dp"
+                android:layout_toEndOf="@+id/dialog_choose_month"
+                app:itemNumber="3"
+                app:lineColor="@color/view_divider_color"
+                app:maskHeight="32dp"
+                app:noEmpty="true"
+                app:normalTextColor="@color/light_gray"
+                app:normalTextSize="@dimen/key_value_size"
+                app:selectedTextColor="@color/main_blue"
+                app:selectedTextSize="@dimen/title_top_size"
+                app:unitHeight="@dimen/picture_size" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:id="@+id/tv_long_term"
+                android:layout_width="@dimen/card_width"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/normal_padding"
+                android:background="@drawable/style_date_picker_long_term"
+                android:gravity="center"
+                android:text="长期"
+                android:textColor="@drawable/long_term_text_color"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/ensure_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="60dp"
+                android:text="确定"
+                android:textColor="@color/main_blue"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/cancel_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="70dp"
+                android:layout_toStartOf="@+id/ensure_text_view"
+                android:text="取消"
+                android:textColor="#666666"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

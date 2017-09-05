@@ -3,6 +3,7 @@ package com.example.luzhichao.datepickerproject;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -33,9 +34,12 @@ public class MainActivity extends AppCompatActivity {
                                 dateTextView.setText(dateString);
                             }
                         })
+                        .isDoubleDate(true)
                         .setType(DatePicker.NORMAL_TYPE)
                         .showDatePicker();
             }
         });
+        String aaa = "12123.png";
+        Log.e("ninini", aaa.contains(".") + "");
     }
 }
