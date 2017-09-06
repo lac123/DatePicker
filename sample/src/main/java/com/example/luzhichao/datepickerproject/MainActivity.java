@@ -13,25 +13,42 @@ import com.example.datepicker.DatePicker;
 public class MainActivity extends AppCompatActivity {
     private Context context;
 
-    private Button button;
-    private TextView dateTextView;
+    private Button singleButton, doubleButton;
+    private TextView singleTV, doubleTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-        button = (Button) findViewById(R.id.bt_choose_date);
-        dateTextView = (TextView) findViewById(R.id.tv_date);
-        button.setOnClickListener(new View.OnClickListener() {
+        singleButton = (Button) findViewById(R.id.bt_choose_date_single);
+        doubleButton = (Button) findViewById(R.id.bt_choose_date_double);
+        singleTV = (TextView) findViewById(R.id.tv_date_single);
+        doubleTV = (TextView) findViewById(R.id.tv_date_double);
+        singleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new DatePicker.Builder(context)
-                        .setDefaultDate(dateTextView.getText().toString())
+                        .setDefaultDate(singleTV.getText().toString())
                         .setSelectedCallback(new DatePicker.OnSelectDateListener() {
                             @Override
                             public void onDateSelected(String dateString) {
-                                dateTextView.setText(dateString);
+                                singleTV.setText(dateString);
+                            }
+                        })
+                        .setType(DatePicker.NORMAL_TYPE)
+                        .showDatePicker();
+            }
+        });
+        doubleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePicker.Builder(context)
+                        .setDefaultDate(doubleTV.getText().toString())
+                        .setSelectedCallback(new DatePicker.OnSelectDateListener() {
+                            @Override
+                            public void onDateSelected(String dateString) {
+                                doubleTV.setText(dateString);
                             }
                         })
                         .isDoubleDate(true)

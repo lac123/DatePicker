@@ -6,17 +6,17 @@ import android.media.SoundPool;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.datepicker.util.DateUtil;
 import com.example.datepicker.wheelview.WheelView;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
+ * 时间选择控件
+ *
  * @author luzhichao
- * @version 2.1, 2017/9/4
- * @since [DatePickerProject/V2.1.2]
+ * @version 2.3.0, 2017/9/4
+ * @since [Sherlock/V2.1.2]
  */
 
 public class DatePicker extends AlertDialog implements View.OnClickListener {
@@ -38,10 +38,6 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
     private WheelView secondMonthWheelView;
 
     private WheelView secondDayWheelView;
-
-    private TextView longTerm;
-
-    private TextView dialogTitle;
 
     public static final int NORMAL_TYPE = 0;
     public static final int CARD_EXPIRY_TYPE = 1;
@@ -73,35 +69,20 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
         this.context = context;
 
         show();
+
         setPickerType(builder.type);
         setDoubleDate(builder.isDoubleDate);
         setDefaultDate(builder.defaultDate);
-        setCallback(builder.callback);
+        setEnsureCallback(builder.callback);
+
         if (builder.isDoubleDate) {
             setContentView(R.layout.alert_dialog_double_date_picker);
         } else {
             setContentView(R.layout.alert_dialog_single_date_picker);
         }
 
-        //init widgets
+        //初始化组件
         initUIWidgets();
-        initData();
-    }
-
-    public void setPickerType(int pickerType) {
-        mPickerType = pickerType;
-    }
-
-    public void setDoubleDate(boolean doubleDate) {
-        isDoubleDate = doubleDate;
-    }
-
-    public void setDefaultDate(String defaultDate) {
-        this.defaultDate = defaultDate;
-    }
-
-    public void setCallback(OnSelectDateListener callback) {
-        this.callback = callback;
     }
 
     /**
@@ -113,8 +94,8 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
         firstMonthWheelView = (WheelView) findViewById(R.id.dialog_choose_month);
         firstDayWheelView = (WheelView) findViewById(R.id.dialog_choose_day);
 
-        longTerm = (TextView) findViewById(R.id.tv_long_term);
-        dialogTitle = (TextView) findViewById(R.id.dialog_title);
+        TextView longTerm = (TextView) findViewById(R.id.tv_long_term);
+        TextView dialogTitle = (TextView) findViewById(R.id.dialog_title);
 
         if (isDoubleDate) {
             secondYearWheelView = (WheelView) findViewById(R.id.second_dialog_choose_year);
@@ -133,38 +114,15 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
         } else {
             dialogTitle.setText(String.format("%s", "请选择日期"));
         }
-    }
 
-
-    @Override
-    public void onClick(View view) {
-        int which = view.getId();
-        if (which == R.id.cancel_text_view) {
-            cancel();
-        } else if (which == R.id.ensure_text_view) {
-            String selectedDateString;
-            if (isDoubleDate) {
-                selectedDateString = String.format("%s%s%s%s%s", firstYearWheelView.getSelectedText()
-                        , "-", firstMonthWheelView.getSelectedText(), "-", firstDayWheelView.getSelectedText() + "~" +
-                                String.format("%s%s%s%s%s", secondYearWheelView.getSelectedText()
-                                        , "-", secondMonthWheelView.getSelectedText(), "-", secondDayWheelView.getSelectedText()))
-                ;
-            } else {
-                selectedDateString = String.format("%s%s%s%s%s", firstYearWheelView.getSelectedText()
-                        , "-", firstMonthWheelView.getSelectedText(), "-", firstDayWheelView.getSelectedText());
-            }
-            callback.onDateSelected(selectedDateString);
-            dismiss();
-        } else {
-            callback.onDateSelected(String.format("%s", "长期"));
-            dismiss();
-        }
+        //为选择器初始化界面数据
+        initViews();
     }
 
     /**
      * 为选择器初始化界面
      */
-    private void initData() {
+    private void initViews() {
         soundPool = new SoundPool.Builder().build();
         soundId = soundPool.load(context, R.raw.tock, 1);
 
@@ -177,14 +135,23 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
             secondMonthWheelView.setData(getMonthData());
         }
 
-        initDefaultDate(defaultDate, firstYearWheelView, firstMonthWheelView, firstDayWheelView);
-
         if (isDoubleDate) {
+            String firstDefaultDate = null;
             String secondDefaultDate = null;
-            if (defaultDate.contains("~")) {
-                secondDefaultDate = defaultDate.split("~")[1];
+
+            //捕获异常,预防传入的默认值是空的
+            try {
+                firstDefaultDate = defaultDate.split("-")[0];
+                secondDefaultDate = defaultDate.split("-")[1];
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                setDefaultDate(firstDefaultDate, firstYearWheelView, firstMonthWheelView, firstDayWheelView);
+                setDefaultDate(secondDefaultDate, secondYearWheelView, secondMonthWheelView, secondDayWheelView);
             }
-            initDefaultDate(secondDefaultDate, secondYearWheelView, secondMonthWheelView, secondDayWheelView);
+
+        } else {
+            setDefaultDate(defaultDate, firstYearWheelView, firstMonthWheelView, firstDayWheelView);
         }
 
         firstYearWheelView.setOnSelectListener(new WheelView.OnSelectListener() {
@@ -260,23 +227,33 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
         }
     }
 
-    private void initDefaultDate(String defaultDate, WheelView yearWV, WheelView monthWV, WheelView dayWV) {
+    /**
+     * 设置默认的日期
+     *
+     * @param defaultDate
+     * @param yearWV
+     * @param monthWV
+     * @param dayWV
+     */
+    private void setDefaultDate(String defaultDate, WheelView yearWV, WheelView monthWV, WheelView dayWV) {
         try {
-            DateUtil.sdfShort.parse(defaultDate);
+            int incomeYear;
+            int incomeMonth;
+            int incomeDay;
 
-            int firstIncomingYear = Integer.valueOf(defaultDate.split("-")[0]);
-            int firstIncomingMonth = Integer.valueOf(defaultDate.split("-")[1]);
-            String inComingDayStr = defaultDate.split("-")[2];
-
-            int firstIncomingDay;
-
-            if (inComingDayStr.contains("~")) {
-                firstIncomingDay = Integer.valueOf(inComingDayStr.split("~")[0]);
+            if (isDoubleDate) {
+                String[] numList = defaultDate.split("/");
+                incomeYear = Integer.valueOf(numList[0]);
+                incomeMonth = Integer.valueOf(numList[1]);
+                incomeDay = Integer.valueOf(numList[2]);
             } else {
-                firstIncomingDay = Integer.valueOf(defaultDate.split("-")[2]);
+                String[] numList = defaultDate.split("-");
+                incomeYear = Integer.valueOf(numList[0]);
+                incomeMonth = Integer.valueOf(numList[1]);
+                incomeDay = Integer.valueOf(numList[2]);
             }
 
-            int yearDifference = firstIncomingYear - curYear;
+            int yearDifference = incomeYear - curYear;
 
             if (yearDifference != 0) {
                 yearWV.setDefault((curYear - 1900) + yearDifference);
@@ -284,15 +261,15 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
                 yearWV.setDefault(curYear - 1900);
             }
 
-            monthWV.setDefault(firstIncomingMonth - 1);
+            monthWV.setDefault(incomeMonth - 1);
             initDayCount(yearWV, monthWV, dayWV);
             if (yearWV == firstYearWheelView) {
-                mFirstDefaultDayIndex = firstIncomingDay - 1;
+                mFirstDefaultDayIndex = incomeDay - 1;
             } else {
-                mSecondDefaultDayIndex = firstIncomingDay - 1;
+                mSecondDefaultDayIndex = incomeDay - 1;
             }
-            dayWV.setDefault(firstIncomingDay - 1);
-        } catch (ParseException | NullPointerException e) {
+            dayWV.setDefault(incomeDay - 1);
+        } catch (Exception e) {
             e.printStackTrace();
             yearWV.setDefault(curYear - 1900);
 
@@ -483,6 +460,42 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
     }
 
     /**
+     * 设置选择器类型
+     *
+     * @param pickerType
+     */
+    private void setPickerType(int pickerType) {
+        mPickerType = pickerType;
+    }
+
+    /**
+     * 设置是否是选择日期区间
+     *
+     * @param doubleDate
+     */
+    private void setDoubleDate(boolean doubleDate) {
+        isDoubleDate = doubleDate;
+    }
+
+    /**
+     * 设置默认的日期
+     *
+     * @param defaultDate
+     */
+    private void setDefaultDate(String defaultDate) {
+        this.defaultDate = defaultDate;
+    }
+
+    /**
+     * 传入确认选择的回调
+     *
+     * @param callback
+     */
+    private void setEnsureCallback(OnSelectDateListener callback) {
+        this.callback = callback;
+    }
+
+    /**
      * 配置月
      *
      * @return
@@ -540,6 +553,31 @@ public class DatePicker extends AlertDialog implements View.OnClickListener {
      */
     private boolean isSmallMonth(int month) {
         return (month == 4 || month == 6 || month == 9 || month == 11);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int which = view.getId();
+        if (which == R.id.cancel_text_view) {
+            cancel();
+        } else if (which == R.id.ensure_text_view) {
+            String selectedDateString;
+            if (isDoubleDate) {
+                selectedDateString = String.format("%s%s%s%s%s", firstYearWheelView.getSelectedText()
+                        , "/", firstMonthWheelView.getSelectedText(), "/", firstDayWheelView.getSelectedText() + "-" +
+                                String.format("%s%s%s%s%s", secondYearWheelView.getSelectedText()
+                                        , "/", secondMonthWheelView.getSelectedText(), "/", secondDayWheelView.getSelectedText()))
+                ;
+            } else {
+                selectedDateString = String.format("%s%s%s%s%s", firstYearWheelView.getSelectedText()
+                        , "-", firstMonthWheelView.getSelectedText(), "-", firstDayWheelView.getSelectedText());
+            }
+            callback.onDateSelected(selectedDateString);
+            dismiss();
+        } else {
+            callback.onDateSelected(String.format("%s", "长期"));
+            dismiss();
+        }
     }
 
     public static final class Builder {

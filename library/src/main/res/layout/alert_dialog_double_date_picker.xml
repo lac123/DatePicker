@@ -53,6 +53,25 @@
                 app:selectedTextSize="@dimen/title_top_size"
                 app:unitHeight="@dimen/picture_size" />
 
+            <LinearLayout
+                android:layout_width="48dp"
+                android:layout_height="150dp"
+                android:layout_toEndOf="@+id/dialog_choose_year"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="61dp"
+                    android:background="@color/view_divider_color" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="44dp"
+                    android:background="@color/view_divider_color" />
+            </LinearLayout>
+
             <com.example.datepicker.wheelview.WheelView
                 android:id="@+id/dialog_choose_month"
                 android:layout_width="57dp"
@@ -69,6 +88,25 @@
                 app:selectedTextColor="@color/main_blue"
                 app:selectedTextSize="@dimen/title_top_size"
                 app:unitHeight="@dimen/picture_size" />
+
+            <LinearLayout
+                android:layout_width="48dp"
+                android:layout_height="150dp"
+                android:layout_toEndOf="@+id/dialog_choose_month"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="61dp"
+                    android:background="@color/view_divider_color" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="44dp"
+                    android:background="@color/view_divider_color" />
+            </LinearLayout>
 
             <com.example.datepicker.wheelview.WheelView
                 android:id="@+id/dialog_choose_day"
@@ -104,6 +142,25 @@
                 app:selectedTextSize="@dimen/title_top_size"
                 app:unitHeight="@dimen/picture_size" />
 
+            <LinearLayout
+                android:layout_width="48dp"
+                android:layout_height="150dp"
+                android:layout_toEndOf="@+id/second_dialog_choose_year"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="61dp"
+                    android:background="@color/view_divider_color" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="44dp"
+                    android:background="@color/view_divider_color" />
+            </LinearLayout>
+
             <com.example.datepicker.wheelview.WheelView
                 android:id="@+id/second_dialog_choose_month"
                 android:layout_width="57dp"
@@ -120,6 +177,25 @@
                 app:selectedTextColor="@color/main_blue"
                 app:selectedTextSize="@dimen/title_top_size"
                 app:unitHeight="@dimen/picture_size" />
+
+            <LinearLayout
+                android:layout_width="48dp"
+                android:layout_height="150dp"
+                android:layout_toEndOf="@+id/second_dialog_choose_month"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="61dp"
+                    android:background="@color/view_divider_color" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="44dp"
+                    android:background="@color/view_divider_color" />
+            </LinearLayout>
 
             <com.example.datepicker.wheelview.WheelView
                 android:id="@+id/second_dialog_choose_day"
@@ -159,22 +235,24 @@
 
             <TextView
                 android:id="@+id/ensure_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="60dp"
+                android:gravity="center"
                 android:text="确定"
                 android:textColor="@color/main_blue"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/cancel_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="70dp"
                 android:layout_toStartOf="@+id/ensure_text_view"
+                android:gravity="center"
                 android:text="取消"
                 android:textColor="#666666"
                 android:textSize="18sp" />
