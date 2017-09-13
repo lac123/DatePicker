@@ -9,8 +9,6 @@ import java.util.Locale;
  *
  * @author colin
  * @version 1.0, 2016-03-31 下午4:54
- * @see [相关类/方法]
- * @since [产品/模块版本]
  */
 public final class StringUtil {
     /**
@@ -37,7 +35,7 @@ public final class StringUtil {
     /**
      * 字符串转整数
      *
-     * @param str a
+     * @param str      a
      * @param defValue a
      * @return a
      */
@@ -144,7 +142,7 @@ public final class StringUtil {
     /**
      * 获取不为空指针的字符串
      *
-     * @param str s
+     * @param str    s
      * @param defStr s
      * @return s
      */
@@ -161,6 +159,9 @@ public final class StringUtil {
 
     /**
      * 格式化显示金额
+     *
+     * @param money s
+     * @return s
      */
     public static String format(float money) {
         return format("%.2f", money);
@@ -168,13 +169,16 @@ public final class StringUtil {
 
     /**
      * 为format方法添加默认的Locale
+     * @param  format a
+     * @param  args a
+     * @return  s
      */
     public static String format(String format, Object... args) {
         return String.format(Locale.getDefault(), format, args);
     }
 
-    public static String numberFormat(double amount){
-        return format("%.1f",amount);
+    public static String numberFormat(double amount) {
+        return format("%.1f", amount);
     }
 
     public static String numberFormat(String format, Object... args) {

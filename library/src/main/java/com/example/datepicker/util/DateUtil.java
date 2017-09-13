@@ -17,8 +17,6 @@ import java.util.Locale;
  *
  * @author colin
  * @version 1.0, 2015-11-18 上午9:18
- * @see [相关类/方法]
- * @since [产品/模块版本]
  */
 @SuppressLint("SimpleDateFormat")
 public class DateUtil {
