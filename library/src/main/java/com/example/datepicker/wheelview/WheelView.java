@@ -492,7 +492,7 @@ public class WheelView extends View {
     /**
      * 设置数据 （第一次）
      *
-     * @param data
+     * @param data s
      */
     public void setData(ArrayList<String> data) {
         this.dataList = data;
@@ -502,7 +502,7 @@ public class WheelView extends View {
     /**
      * 重置数据
      *
-     * @param data
+     * @param data s
      */
     public void refreshData(ArrayList<String> data) {
         setData(data);
@@ -511,7 +511,7 @@ public class WheelView extends View {
     /**
      * 获取返回项 id
      *
-     * @return
+     * @return s
      */
     public int getSelected() {
         for (ItemObject item : itemList) {
@@ -524,7 +524,7 @@ public class WheelView extends View {
     /**
      * 获取返回的内容
      *
-     * @return
+     * @return s
      */
     public String getSelectedText() {
         for (ItemObject item : itemList) {
@@ -537,7 +537,7 @@ public class WheelView extends View {
     /**
      * 是否正在滑动
      *
-     * @return
+     * @return s
      */
     public boolean isScrolling() {
         return isScrolling;
@@ -546,7 +546,7 @@ public class WheelView extends View {
     /**
      * 是否可用
      *
-     * @return
+     * @return s
      */
     public boolean isEnable() {
         return isEnable;
@@ -555,7 +555,7 @@ public class WheelView extends View {
     /**
      * 设置是否可用
      *
-     * @param isEnable
+     * @param isEnable s
      */
     public void setEnable(boolean isEnable) {
         this.isEnable = isEnable;
@@ -564,7 +564,7 @@ public class WheelView extends View {
     /**
      * 设置默认选项
      *
-     * @param index
+     * @param index s
      */
     public void setDefault(int index) {
         if (index > itemList.size() - 1)
@@ -576,7 +576,7 @@ public class WheelView extends View {
     /**
      * 获取列表大小
      *
-     * @return
+     * @return s
      */
     public int getListSize() {
         if (itemList == null)
@@ -587,8 +587,8 @@ public class WheelView extends View {
     /**
      * 获取某项的内容
      *
-     * @param index
-     * @return
+     * @param index s
+     * @return s
      */
     public String getItemText(int index) {
         if (itemList == null)
@@ -599,7 +599,7 @@ public class WheelView extends View {
     /**
      * 监听
      *
-     * @param onSelectListener
+     * @param onSelectListener s
      */
     public void setOnSelectListener(OnSelectListener onSelectListener) {
         this.onSelectListener = onSelectListener;
@@ -708,7 +708,7 @@ public class WheelView extends View {
         /**
          * 是否在可视界面内
          *
-         * @return
+         * @return s
          */
         public boolean isInView() {
             if (y + move > controlHeight || (y + move + unitHeight / 2 + textRect.height() / 2) < 0)
@@ -719,7 +719,7 @@ public class WheelView extends View {
         /**
          * 移动距离
          *
-         * @param _move
+         * @param _move s
          */
         public void move(int _move) {
             this.move = _move;
@@ -728,7 +728,7 @@ public class WheelView extends View {
         /**
          * 设置新的坐标
          *
-         * @param _move
+         * @param _move s
          */
         public void newY(int _move) {
             this.move = 0;
@@ -738,7 +738,7 @@ public class WheelView extends View {
         /**
          * 判断是否在选择区域内
          *
-         * @return
+         * @return s
          */
         public boolean isSelected() {
             if ((y + move) >= controlHeight / 2 - unitHeight / 2 + lineHeight
@@ -773,16 +773,16 @@ public class WheelView extends View {
         /**
          * 结束选择
          *
-         * @param id
-         * @param text
+         * @param id s
+         * @param text s
          */
         void endSelect(int id, String text);
 
         /**
          * 选中的内容
          *
-         * @param id
-         * @param text
+         * @param id s
+         * @param text s
          */
         void selecting(int id, String text);
 

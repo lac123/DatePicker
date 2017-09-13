@@ -146,12 +146,7 @@ public class DateUtil {
         return Integer.valueOf(date.toString().substring(0, date.toString().length() - 3));
     }
 
-    /**
-     * 获取前几年或后几年
-     *
-     * @param year
-     * @return
-     */
+
     public static String preOrBeforeYear(int year) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy", Locale.US);
         Calendar c = Calendar.getInstance();//此时打印它获取的是系统当前时间
@@ -162,8 +157,8 @@ public class DateUtil {
     /**
      * 获取前几月或后几月
      *
-     * @param month
-     * @return
+     * @param month ss
+     * @return 获取前几月或后几月
      */
     public static String getMonth(int month) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月", Locale.US);
@@ -175,9 +170,9 @@ public class DateUtil {
     /**
      * 获取指定时间的前几个月和后几个月
      *
-     * @param month
-     * @param date
-     * @return
+     * @param month ss
+     * @param date  ss
+     * @return ss
      */
     public static Date getDateMonthDay(int month, Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -190,8 +185,8 @@ public class DateUtil {
     /**
      * 获取指定时间月的第一天
      *
-     * @param date
-     * @return
+     * @param date s
+     * @return s
      */
     public static Date getFirstMonthDate(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -204,8 +199,8 @@ public class DateUtil {
     /**
      * 获取指定时间月的第几号
      *
-     * @param date
-     * @return
+     * @param date a
+     * @return a
      */
     public static String getMonthDate(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -215,8 +210,8 @@ public class DateUtil {
     /**
      * 获取指定年的第一天
      *
-     * @param date
-     * @return
+     * @param date a
+     * @return a
      */
     public static Date getFirstYearDate(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -230,7 +225,7 @@ public class DateUtil {
     /**
      * 获取本周的第一天
      *
-     * @return
+     * @return a
      */
     public static Date getFistWeekDay() {
         Calendar c = Calendar.getInstance();
@@ -256,11 +251,7 @@ public class DateUtil {
 
 
     /**
-     * <得到本月的第一天 >
-     * <功能详细描述>
-     *
-     * @return
-     * @format 格式化
+     * @return a
      * @see [类、类#方法、类#成员]
      */
     public static String getMonthFirstDay() {
@@ -270,10 +261,8 @@ public class DateUtil {
     }
 
     /**
-     * <获取当季第一天>
-     * <功能详细描述>
      *
-     * @return
+     * @return s
      * @see [类、类#方法、类#成员]
      */
     public static String getCurrentSeasonFirstDay() {
@@ -299,7 +288,7 @@ public class DateUtil {
      * <获取当季最后一天>
      * <功能详细描述>
      *
-     * @return
+     * @return s
      * @see [类、类#方法、类#成员]
      */
     public static String getCurrentSeasonLastDay() {
@@ -342,7 +331,7 @@ public class DateUtil {
     /**
      * 获取某一天最后一秒时间
      *
-     * @param date
+     * @param date s
      * @return
      */
     public static Date getTodayLastTime(Date date) {
@@ -357,7 +346,7 @@ public class DateUtil {
     /**
      * 获取指定天的最开始的时间
      *
-     * @param date
+     * @param date s
      * @return
      */
     public static Date getTodayFirstTime(Date date) {
@@ -408,8 +397,8 @@ public class DateUtil {
     /**
      * 获取几天前的时间
      *
-     * @param days
-     * @return
+     * @param days s
+     * @return s
      */
     public static Date getBeforeDayTime(int days) {
         Calendar c = Calendar.getInstance();
@@ -457,7 +446,7 @@ public class DateUtil {
      * 转换日期 转换为更为人性化的时间
      *
      * @param time 时间
-     * @return
+     * @return s
      */
     private String translateDate(long time, long curTime) {
         long oneDay = 24 * 60 * 60;
@@ -519,8 +508,8 @@ public class DateUtil {
     /**
      * 秒数转换成时分秒
      *
-     * @param time
-     * @return
+     * @param time s
+     * @return s
      */
     public static String secToTime(int time) {
         String timeStr = null;
@@ -558,8 +547,8 @@ public class DateUtil {
     /**
      * turn 2016-07-26 to 2016-07-26 00:00:00
      *
-     * @param date
-     * @return
+     * @param date s
+     * @return s
      */
     public static String dateToDateTime(String date) {
         if (StringUtil.isEmpty(date)) return null;
@@ -570,8 +559,8 @@ public class DateUtil {
     /**
      * turn 2016-07-26 00:00:00 to 2016-07-26
      *
-     * @param dateTime
-     * @return
+     * @param dateTime s
+     * @return s
      */
     public static String dateTimeToDate(String dateTime) {
         if (StringUtil.isEmpty(dateTime)) return "";
@@ -587,9 +576,9 @@ public class DateUtil {
     /**
      * 按日期获取两个时间之间的天数间隔
      *
-     * @param startDate
-     * @param endDate
-     * @return
+     * @param startDate s
+     * @param endDate s
+     * @return s
      */
     public static int daysInterval(Date startDate, Date endDate) {
 
@@ -610,9 +599,9 @@ public class DateUtil {
     /**
      * 判断时间间隔是否大于4个月
      *
-     * @param startDate
-     * @param endDate
-     * @return
+     * @param startDate s
+     * @param endDate s
+     * @return s
      */
     public static boolean isGreaterThanFourMonths(String startDate, String endDate) {
         if (startDate != null && endDate != null) {
@@ -637,9 +626,9 @@ public class DateUtil {
     /**
      * 判断目标时间是否早于指定的时间
      *
-     * @param targetDate
-     * @param templateDate
-     * @return
+     * @param targetDate s
+     * @param templateDate s
+     * @return s
      */
     public static boolean isBefore(String targetDate, String templateDate) {
         if (!StringUtil.isEmpty(targetDate) && !StringUtil.isEmpty(templateDate)) {
@@ -668,8 +657,8 @@ public class DateUtil {
     /**
      * 根据OCR扫描出的结果获取身份证有效期限
      *
-     * @param scanResult
-     * @return
+     * @param scanResult s
+     * @return s
      */
     public static String getScanIdCardExpireDate(String scanResult) {
         if (!StringUtil.isEmpty(scanResult)) {
