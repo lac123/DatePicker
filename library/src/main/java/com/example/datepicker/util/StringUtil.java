@@ -37,9 +37,9 @@ public final class StringUtil {
     /**
      * 字符串转整数
      *
-     * @param str
-     * @param defValue
-     * @return
+     * @param str a
+     * @param defValue a
+     * @return a
      */
     public static int toInt(String str, int defValue) {
         try {
@@ -51,7 +51,7 @@ public final class StringUtil {
     }
 
     /**
-     * byte[]数组转换为16进制的字符串
+     * byte数组转换为16进制的字符串
      *
      * @param data 要转换的字节数组
      * @return 转换后的结果
@@ -109,7 +109,7 @@ public final class StringUtil {
      * 为给定的字符串添加HTML红色标记，当使用Html.fromHtml()方式显示到TextView 的时候其将是红色的
      *
      * @param string 给定的字符串
-     * @return
+     * @return s
      */
     public static String addHtmlRedFlag(String string) {
         return "<font color=\"red\">" + string + "</font>";
@@ -134,8 +134,8 @@ public final class StringUtil {
     /**
      * 获取不为空指针的字符串
      *
-     * @param str
-     * @return
+     * @param str s
+     * @return s
      */
     public static String getSafeString(String str) {
         return getSafeString(str, "");
@@ -144,9 +144,9 @@ public final class StringUtil {
     /**
      * 获取不为空指针的字符串
      *
-     * @param str
-     * @param defStr
-     * @return
+     * @param str s
+     * @param defStr s
+     * @return s
      */
     public static String getSafeString(String str, String defStr) {
         if (isEmpty(str)) {

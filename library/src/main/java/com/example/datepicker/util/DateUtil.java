@@ -252,7 +252,6 @@ public class DateUtil {
 
     /**
      * @return a
-     * @see [类、类#方法、类#成员]
      */
     public static String getMonthFirstDay() {
         Calendar calendar = Calendar.getInstance();
@@ -263,7 +262,6 @@ public class DateUtil {
     /**
      *
      * @return s
-     * @see [类、类#方法、类#成员]
      */
     public static String getCurrentSeasonFirstDay() {
         Calendar c = Calendar.getInstance();//获取当前日期
@@ -285,11 +283,8 @@ public class DateUtil {
     }
 
     /**
-     * <获取当季最后一天>
-     * <功能详细描述>
      *
      * @return s
-     * @see [类、类#方法、类#成员]
      */
     public static String getCurrentSeasonLastDay() {
         Calendar c = Calendar.getInstance();//获取当前日期
@@ -312,13 +307,10 @@ public class DateUtil {
     }
 
     /**
-     * <日期转字符串>
-     * <功能详细描述>
      *
      * @param date   日期
      * @param format 日期格式
      * @return 字符串
-     * @see [类、类#方法、类#成员]
      */
     public static String format(Date date, String format) {
         if (null == date) {
@@ -332,7 +324,7 @@ public class DateUtil {
      * 获取某一天最后一秒时间
      *
      * @param date s
-     * @return
+     * @return s
      */
     public static Date getTodayLastTime(Date date) {
         Calendar c = Calendar.getInstance();
@@ -347,7 +339,7 @@ public class DateUtil {
      * 获取指定天的最开始的时间
      *
      * @param date s
-     * @return
+     * @return s
      */
     public static Date getTodayFirstTime(Date date) {
         Calendar c = Calendar.getInstance();
