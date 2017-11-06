@@ -27,9 +27,13 @@ public class SampleApplication extends DefaultApplicationLike {
         super.onCreate();
         // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId
         // 调试时，将第三个参数改为true
-        Bugly.init(getApplication(), "d0009391d5", true);
+        Beta.enableHotfix = true;
+        Beta.canAutoDownloadPatch = true;
+        // Todo 暂时关闭提示重启的通知，等解决重启后报错的问题再开放
+        Beta.canNotifyUserRestart = false;
+        Beta.canAutoPatch = true;
+        Bugly.init(getApplication(), "d0009391d5", false);
     }
-
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override

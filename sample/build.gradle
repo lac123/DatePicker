@@ -15,8 +15,8 @@ android {
         minSdkVersion 14
         applicationId "com.example.luzhichao.datepickerproject"
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 7
+        versionName "1.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构
@@ -34,7 +34,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             signingConfig signingConfigs.congfig
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
